@@ -7,8 +7,9 @@ Repository to store code and instructions for the Triton Custom Backend developm
 To compile the custom backend with the triton server, we need to prepare the container first:
 ```
 git clone git@github.com:triton-inference-server/server.git
+cd server
 git checkout r21.02
-./build.py --build-dir=/storage/local/data1/home/yfeng/Backend/buildir --enable-logging --enable-stats --enable-tracing --enable-metrics --enable-gpu-metrics --enable-gpu --filesystem=gcs --filesystem=azure_storage --filesystem=s3 --endpoint=http --endpoint=grpc --repo-tag=common:r21.02 --repo-tag=core:r21.02 --repo-tag=backend:r21.02 --backend=custom:r21.02 --backend=ensemble:r21.02 --backend=python:r21.02 --backend=tensorflow1:r21.02 --backend=identity:r21.02
+./build.py --build-dir=.buildir --enable-logging --enable-stats --enable-tracing --enable-metrics --enable-gpu-metrics --enable-gpu --filesystem=gcs --filesystem=azure_storage --filesystem=s3 --endpoint=http --endpoint=grpc --repo-tag=common:r21.02 --repo-tag=core:r21.02 --repo-tag=backend:r21.02 --backend=custom:r21.02 --backend=ensemble:r21.02 --backend=python:r21.02 --backend=tensorflow1:r21.02 --backend=identity:r21.02
 ```
 
 This will build several containers, together with the identity custom backend. Note the pytorch, tensorRT, TF2, and onnx backends have been skipped since the focus here is on custom backend. What is needed is the final `tritonserver` container, which needs some extra libraries in order to be used to compile other custom backends:
