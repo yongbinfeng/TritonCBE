@@ -17,3 +17,30 @@ I have prepared the container, with the needed libraries and classes for compila
 ```
 docker pull yongbinfeng/tritonserver:21.02v2
 ```
+
+(The container is already at ailab01. So `docker pull` can be skipped if running on ailab01.)
+
+## Compile the custom backend in the container
+
+Take the identity custom backend as an example: 
+```
+mkdir CustomBackends
+git clone git@github.com:triton-inference-server/identity_backend.git
+cd identity_backend
+git checkout r21.02
+```
+
+Then start the docker container and compile inside the container:
+```
+ nvidia-docker run -it --gpus=1 -p8020:8000 -p8021:8001 -p8022:8002 --rm -v/PATH_TO_CustomBackends/:/workspace/backend yongbinfeng/tritonserver:21.02v2
+ cd /workspace/backend/identity_backend/
+ mkdir build
+ cd build
+ cmake -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_BACKEND_REPO_TAG=r21.02 -DTRITON_CORE_REPO_TAG=r21.02 -DTRITON_COMMON_REPO_TAG=r21.02 ..
+ make install
+```
+
+This will compile the `identity` custom backend, with the library `libtriton_identity.so`.
+
+## Run the test with Identity backend
+
