@@ -47,11 +47,39 @@ This will compile the `identity` custom backend, with the library `libtriton_ide
 
 Clone this repository, which includes the test scripts and the model config file for `Identity`
 ```
+mkdir Test
 git clone git@github.com:yongbinfeng/TritonCBE.git
 cd TritonCBE/TestIdentity/identity_fp32/
 ```
-Then copy the compiled so file to the model directory:
+
+### Server side
+Copy the compiled so file to the model directory:
 ```
 cp /PATH_TO_CustomBackends/CustomBackends/identity_backend/build/libtriton_identity.so ./1/
+```
+Start the triton server with this `identity` model:
+```
+nvidia-docker run -it --gpus=1 -p8020:8000 -p8021:8001 -p8022:8002 --rm -v/PATH_TO_Test/TritonCBE/TestIdentity/:/models yongbinfeng/tritonserver:21.02v2 tritonserver --model-repository=/models
+```
+Then the server should start with the ouputs like
+```
+I0827 10:15:37.927419 1 grpc_server.cc:3979] Started GRPCInferenceService at 0.0.0.0:8001
+I0827 10:15:37.927743 1 http_server.cc:2717] Started HTTPService at 0.0.0.0:8000
+I0827 10:15:37.970316 1 http_server.cc:2736] Started Metrics Service at 0.0.0.0:8002
+```
+
+### Client side
+Open another terminal, pull and start the client container:
+```
+docker pull nvcr.io/nvidia/tritonserver:21.02-py3-sdk
+nvidia-docker run -it --rm -v/PATH_TO_Test/TritonCBE/TestIdentity:/workspace/test --net=host nvcr.io/nvidia/tritonserver:21.02-py3-sdk
+cd /workspace/test/
+python identity_test.py
+python identity_test.py --protocol grpc
+```
+
+The script generates some random numpy arrays, send them to the server, and compare with the outputs from the server. At the end you should see
+```
+Passed all tests!
 ```
 

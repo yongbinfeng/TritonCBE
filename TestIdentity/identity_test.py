@@ -109,6 +109,9 @@ if __name__ == '__main__':
                     print("error: expected 'OUTPUT0'")
                     sys.exit(1)
 
+                print("input data ", input_datas[i])
+                print("output data: ", output_data)
+
                 if not np.array_equal(output_data, input_datas[i]):
                     print("error: expected output {} to match input {}".format(
                         output_data, input_datas[i]))
@@ -118,15 +121,8 @@ if __name__ == '__main__':
     with client_util.InferenceServerClient(FLAGS.url,
                                            verbose=FLAGS.verbose) as client:
         for model_name, np_dtype, shape in (
-            # yapf: disable
             ("identity_fp32", np.float32, [1, 0]),
             ("identity_fp32", np.float32, [1, 5])):
-            #("identity_uint32", np.uint32, [4, 0]),
-            #("identity_uint32", np.uint32, [8, 5]),
-            #("identity_nobatch_int8", np.int8, [0]),
-            #("identity_nobatch_int8", np.int8, [7]),
-            #("identity_bytes", object, [1, 1])):
-            # yapf: enable
             if np_dtype != object:
                 input_data = (16384 * np.random.randn(*shape)).astype(np_dtype)
             else:
@@ -141,7 +137,6 @@ if __name__ == '__main__':
             inputs[0].set_data_from_numpy(input_data)
 
             results = client.infer(model_name, inputs)
-            print(results)
 
             # Make sure outputs are expected value
             output_data = results.as_numpy("OUTPUT0")
