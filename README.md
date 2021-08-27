@@ -33,6 +33,7 @@ docker pull yongbinfeng/tritonserver:21.02v2
 Take the identity custom backend as an example: 
 ```
 mkdir CustomBackends
+cd CustomBackends
 git clone git@github.com:triton-inference-server/identity_backend.git
 cd identity_backend
 git checkout r21.02
@@ -56,6 +57,7 @@ This will compile the `identity` custom backend, with the library `libtriton_ide
 Clone this repository, which includes the test scripts and the model config file for `Identity`
 ```
 mkdir Test
+cd Test
 git clone git@github.com:yongbinfeng/TritonCBE.git
 cd TritonCBE/TestIdentity/identity_fp32/
 ```
