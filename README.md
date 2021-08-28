@@ -93,3 +93,48 @@ The script generates some random numpy arrays, send them to the server, and comp
 Passed all tests!
 ```
 
+## p2r test
+
+### Directly running p2r
+Get the [p2r](https://github.com/cerati/p2r-tests/blob/main/src/propagate-tor-test_cuda_v4.cu) code and compile inside the docker container:
+```
+git clone git@github.com:cerati/p2r-tests.git
+nvidia-docker run -it --gpus=1 -p8020:8000 -p8021:8001 -p8022:8002 --rm --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -v/PATH_TO_p2r-test:/workspace/p2r yongbinfeng/tritonserver:21.02v2
+cd /workspace/p2r
+nvcc -arch=sm_70 -Iinclude -std=c++17 -maxrregcount=64 -g -lineinfo -o propagate-tor-test_cuda_v4_nvcc src/propagate-tor-test_cuda_v4.cu
+```
+
+This will produce an executble file `propagate-tor-test_cuda_v4_nvcc` in the same directory, run it with
+```
+./propagate-tor-test_cuda_v4_nvcc
+```
+The outputs should be like
+```
+Streams: 1, blocks: 25600, threads(x): (32), bsize = (32)
+track in pos: x=-12.806847, y=-7.723825, z=38.130142, r=14.955694
+track in cov: xx=6.29e-07, yy=7.53e-07, zz=9.63e-08
+hit in pos: x=-20.782465, y=-12.241503, z=57.806763, r=24.119810
+produce nevts=100 ntrks=8192 smearing by=0.100000
+NITER=5
+done preparing!
+Number of struct MPTRK trk[] = 25600
+Number of struct MPTRK outtrk[] = 25600
+Number of struct struct MPHIT hit[] = 25600
+Size of struct MPTRK trk[] = 91750400
+Size of struct MPTRK outtrk[] = 91750400
+Size of struct struct MPHIT hit[] = 589824000
+setup time time=14.425000 (s)
+done ntracks=4096000 tot time=0.414030 (s) time/trk=1.010815e-07 (s)
+formatted 5 100 8192 32 256 0.414030 0 14.425000 1
+track x avg=-21.287258 std/avg=0.168731
+track y avg=-12.544975 std/avg=0.162441
+track z avg=64.127831 std/avg=18.857132
+track r avg=24.770483 std/avg=0.058340
+track dx/x avg=0.012120 std=0.285085
+track dy/y avg=0.013154 std=0.413136
+track dz/z avg=0.083373 std=22.414892
+track dr/r avg=0.015623 std=0.130872
+track pt avg=3.846811
+track phi avg=-2.631085
+track theta avg=0.350691
+```
