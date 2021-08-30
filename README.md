@@ -140,4 +140,19 @@ track theta avg=0.350691
 ```
 
 ### p2r custom backend
-Work in progress
+#### Compile the p2r custom backend
+Compile the p2r custom backend inside the docker container environment:
+```
+nvidia-docker run -it --gpus=1 -v/PATH_TO_TritonCBE/p2rCBE:/workspace/p2r yongbinfeng/tritonserver:21.02v2
+cd /workspace/p2r
+mkdir build
+cd build
+cmake ..
+make install
+```
+#### Test the p2r custom backend
+This will produce a `libtriton_p2r.so` under build. Copy it to the directory `TritonCBE/TestP2r/p2r/1/`. Load the `p2r` model directory with the container, similar to the identity backend case:
+```
+nvidia-docker run -it --gpus=1 -p8030:8000 -p8031:8001 -p8032:8002 --rm --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -v/PATH_TO_TritonCBE/TestP2r:/models yongbinfeng/tritonserver:21.02v2 tritonserver --model-repository=/models
+```
+Start another client container, run the `p2r_test.py`
