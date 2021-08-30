@@ -155,4 +155,27 @@ This will produce a `libtriton_p2r.so` under build. Copy it to the directory `Tr
 ```
 nvidia-docker run -it --gpus=1 -p8030:8000 -p8031:8001 -p8032:8002 --rm --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -v/PATH_TO_TritonCBE/TestP2r:/models yongbinfeng/tritonserver:21.02v2 tritonserver --model-repository=/models
 ```
-Start another client container, run the `p2r_test.py`
+Start another client container, run the `p2r_test.py`. The output should be similar to
+```
+done preparing!
+Number of struct MPTRK trk[] = 25600
+Number of struct MPTRK outtrk[] = 25600
+Number of struct struct MPHIT hit[] = 25600
+Size of struct MPTRK trk[] = 91750400
+Size of struct MPTRK outtrk[] = 91750400
+Size of struct struct MPHIT hit[] = 589824000
+setup time time=6.673000 (s)
+done ntracks=4096000 tot time=0.475465 (s) time/trk=1.160803e-07 (s)
+formatted 5 100 8192 32 256 0.475465 0 6.673000 1
+track x avg=-21.287258 std/avg=0.168731
+track y avg=-12.544975 std/avg=0.162441
+track z avg=64.127831 std/avg=18.857132
+track r avg=24.770483 std/avg=0.058340
+track dx/x avg=0.012120 std=0.285085
+track dy/y avg=0.013154 std=0.413136
+track dz/z avg=0.083373 std=22.414892
+track dr/r avg=0.015623 std=0.130872
+track pt avg=3.846811
+track phi avg=-2.631085
+track theta avg=0.350691
+```
