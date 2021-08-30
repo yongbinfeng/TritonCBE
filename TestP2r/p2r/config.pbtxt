@@ -1,0 +1,37 @@
+name: "p2r"
+backend: "p2r"
+max_batch_size: 0
+input [
+  {
+    name: "INPUT_ATRK_PAR"
+    data_type: TYPE_FP32
+    dims: [ 6 ]
+  },
+  {
+    name: "INPUT_ATRK_COV"
+    data_type: TYPE_FP32
+    dims: [ 21 ]
+  },
+  {
+    name: "INPUT_ATRK_Q"
+    data_type: TYPE_INT32
+    dims: [ 1 ]
+  },
+  {
+    name: "INPUT_AHIT_POS"
+    data_type: TYPE_FP32
+    dims: [3]
+  },
+  {
+    name: "INPUT_AHIT_COV"
+    data_type: TYPE_FP32
+    dims: [6]
+  }
+]
+output [
+  {
+    name: "OUTPUT0"
+    data_type: TYPE_FP32
+    dims: [ 1 ]
+  }
+]
