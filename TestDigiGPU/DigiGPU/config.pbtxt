@@ -1,0 +1,62 @@
+name: "DigiGPU"
+backend: "DigiGPU"
+max_batch_size: 0
+input [
+  {
+    name: "F5_STRIDE"
+    data_type: TYPE_UINT32
+    dims: [1]
+  },
+  {
+    name: "F5_IDS"
+    data_type: TYPE_UINT32
+    dims: [2]
+  },
+  {
+    name: "F5_DATA"
+    data_type: TYPE_UINT16
+    dims: [4]
+  },
+  {
+    name: "F5_NPRESAMPLES"
+    data_type: TYPE_UINT8
+    dims: [7]
+  },
+  {
+    name: "F01_STRIDE"
+    data_type: TYPE_UINT32
+    dims: [1]
+  },
+  {
+    name: "F01_IDS"
+    data_type: TYPE_UINT32
+    dims: [2]
+  },
+  {
+    name: "F01_DATA"
+    data_type: TYPE_UINT16
+    dims: [4]
+  },
+  {
+    name: "F3_STRIDE"
+    data_type: TYPE_UINT32
+    dims: [1]
+  },
+  {
+    name: "F3_IDS"
+    data_type: TYPE_UINT32
+    dims: [2]
+  },
+  {
+    name: "F3_DATA"
+    data_type: TYPE_UINT16
+    dims: [4]
+  }
+]
+output [
+  {
+    name : "OUTPUT0"
+    data_type: TYPE_BOOL
+    dims: [1]
+  }
+]
