@@ -199,8 +199,13 @@ class ModelInstanceState {
   // Get the state of the model that corresponds to this instance.
   ModelState* StateForModel() const { return model_state_; }
 
+  // Init memory 
+  void InitMemory(uint32_t stride5, uint32_t stride01, uint32_t stride3);
+
   // execute the DigiGPU
   float ProcessRequest(TRITONBACKEND_Request* request);
+
+  uint32_t* GetDF5IDs() {return df5_ids;}
 
  private:
   ModelInstanceState(ModelState* model_state,
@@ -220,6 +225,15 @@ class ModelInstanceState {
   int stream_range_;
 
   cudaStream_t streams_[8];
+
+  // device pointers
+  uint16_t* df5_data;
+  uint32_t* df5_ids;
+  uint8_t* df5_npresamples;
+  uint16_t* df01_data;
+  uint32_t* df01_ids;
+  uint16_t* df3_data;
+  uint32_t* df3_ids;
 
   struct timeval timecheck_;
   long setup_start_, setup_stop_;
@@ -342,6 +356,16 @@ TRITONSERVER_Error* ModelInstanceState::Init(std::vector<float>& vtrk_par, std::
   return nullptr;
 }
 */
+
+void ModelInstanceState::InitMemory(uint32_t stride5, uint32_t stride01, uint32_t stride3) {
+  CK_CUDA_THROW_(cudaMalloc((uint16_t**)&df5_data, 1e4*stride5*sizeof(uint16_t)));
+  CK_CUDA_THROW_(cudaMalloc((uint32_t**)&df5_ids,  1e4*sizeof(uint32_t)));
+  CK_CUDA_THROW_(cudaMalloc((uint8_t**)&df5_npresamples,  1e4*sizeof(uint8_t)));
+  CK_CUDA_THROW_(cudaMalloc((uint16_t**)&df01_data, 1e4*stride01*sizeof(uint16_t)));
+  CK_CUDA_THROW_(cudaMalloc((uint32_t**)&df01_ids, 1e4*sizeof(uint32_t)));
+  CK_CUDA_THROW_(cudaMalloc((uint16_t**)&df3_data, 1e4*stride3*sizeof(uint16_t)));
+  CK_CUDA_THROW_(cudaMalloc((uint32_t**)&df3_ids,  1e4*sizeof(uint32_t)));
+}
 
 float ModelInstanceState::ProcessRequest(TRITONBACKEND_Request* request) {
   return 0.5;
@@ -567,11 +591,47 @@ TRITONSERVER_Error* TRITONBACKEND_ModelInstanceExecute(
         responses, r,
         backend::ReadInputTensor(request, "F3_STRIDE", reinterpret_cast<char*>(&f3_stride), &f3_stride_size));
 
-    //std::vector<float> v_trk_cov(21);
-    //size_t trk_cov_byte_size = sizeof(float) * 21;
-    //GUARDED_RESPOND_IF_ERROR(
-    //    responses, r,
-    //    backend::ReadInputTensor(request, "INPUT_ATRK_COV", reinterpret_cast<char*>(&(v_trk_cov[0])), &trk_cov_byte_size));
+    instance_state->InitMemory(f5_stride, f01_stride, f3_stride);
+
+    TRITONBACKEND_Input* f5_ids_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F5_IDS", &f5_ids_input));
+
+    TRITONBACKEND_Input* f5_data_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F5_DATA", &f5_data_input));
+
+    TRITONBACKEND_Input* f5_npresamples_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F5_NPRESAMPLES", &f5_npresamples_input));
+
+    TRITONBACKEND_Input* f01_ids_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F01_IDS", &f01_ids_input));
+
+    TRITONBACKEND_Input* f01_data_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F01_DATA", &f01_data_input));
+
+    TRITONBACKEND_Input* f3_ids_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F3_IDS", &f3_ids_input));
+
+    TRITONBACKEND_Input* f3_data_input = nullptr;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r, TRITONBACKEND_RequestInput(request, "F3_DATA", &f3_data_input));
+
+    // copy input data in gpu memory after init with malloc
+    const void* f5_ids_buffer=nullptr;
+    uint64_t buffer_byte_size = sizeof(uint32_t);
+    TRITONSERVER_MemoryType input_memory_type = TRITONSERVER_MEMORY_GPU;
+    int64_t input_memory_type_id = 0;
+    GUARDED_RESPOND_IF_ERROR(
+        responses, r,
+        TRITONBACKEND_InputBuffer(
+            f5_ids_input, 0, &f5_ids_buffer, &buffer_byte_size, &input_memory_type,
+            &input_memory_type_id));
+    CK_CUDA_THROW_(cudaMemcpy(instance_state->GetDF5IDs(), f5_ids_buffer, buffer_byte_size, cudaMemcpyHostToDevice));
 
     // We also validated that the model configuration specifies only a
     // single output, but the request is not required to request any
