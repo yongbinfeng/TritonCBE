@@ -3,21 +3,25 @@ backend: "identity"
 max_batch_size: 10
 input [
   {
-    name: "INPUT0"
-    data_type: TYPE_FP32
-    dims: [ -1 ]
+    name: "input"
+    data_type: TYPE_UINT32
+    dims: [ 200000 ]
   }
 ]
 output [
   {
     name: "OUTPUT0"
-    data_type: TYPE_FP32
-    dims: [ -1 ]
+    data_type: TYPE_UINT8
+    dims: [ 7000000 ]
+    #dims: [ 2036649 ]                                                                                                                                                                                                                        
   }
 ]
 instance_group [
   {
     count: 1
     kind : KIND_CPU
+
   }
 ]
+
+
