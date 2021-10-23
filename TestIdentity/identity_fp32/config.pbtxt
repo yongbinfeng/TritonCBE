@@ -12,7 +12,7 @@ output [
   {
     name: "OUTPUT0"
     data_type: TYPE_UINT8
-    dims: [ 7000000 ]
+    dims: [ 7200000 ]
     #dims: [ 2036649 ]                                                                                                                                                                                                                        
   }
 ]
