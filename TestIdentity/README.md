@@ -17,8 +17,8 @@ cmake -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install ..
 make install
 
 cp $BASEDIR/pixeltrack-standalone/lib/cudadev/*.so $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
-cp $BASEDIR/identity_backend/build/libtriton_identity.so $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
-cp $BASEDIR/pixeltrack-standalone/external/tbb/lib/libtbb.so.* $BASEDIR/Test/TritonCBE/TestIdentity/identity_fp32/1/
+cp $BASEDIR/identity_backend/build/libtriton_identity.so                     $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
+cp $BASEDIR/pixeltrack-standalone/external/tbb/lib/libtbb.so*                $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
 cp $BASEDIR/pixeltrack-standalone/external/libbacktrace/lib/libbacktrace.so  $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
 cd $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
 wget data.tgz https://www.dropbox.com/s/c9pzz0k0h8ng5wd/data.tgz?dl=0 
