@@ -1,6 +1,10 @@
 name: "identity_fp32"
 backend: "identity"
-max_batch_size: 10
+max_batch_size: 20
+#dynamic_batching { 
+# preferred_batch_size : 10 
+# max_queue_delay_microseconds: 50000
+#}
 input [
   {
     name: "input"
@@ -11,8 +15,8 @@ input [
 output [
   {
     name: "OUTPUT0"
-    data_type: TYPE_UINT8
-    dims: [ 7200000 ]
+    data_type: TYPE_INT8
+    dims: [ -1 ]
     #dims: [ 2036649 ]                                                                                                                                                                                                                        
   }
 ]
