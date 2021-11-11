@@ -1,8 +1,9 @@
+```
 export BASEDIR=`pwd` \
 git clone -b v21.02_phil https://github.com/violatingcp/identity_backend.git \
 git clone -b 21.02_phil https://github.com/violatingcp/pixeltrack-standalone.git \
 git clone https://github.com/violatingcp/TritonCBE.git \
-
+```
 
 nvidia-docker run -it --gpus=1 -p8020:8000 -p8021:8001 -p8022:8002 --rm -v$BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ yongbinfeng/tritonserver:21.02v2 \
 cd /workspace/backend/pixel/ \
