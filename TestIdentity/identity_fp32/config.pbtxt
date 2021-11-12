@@ -1,6 +1,6 @@
 name: "identity_fp32"
 backend: "identity"
-max_batch_size: 10
+max_batch_size: 20
 input [
   {
     name: "input"

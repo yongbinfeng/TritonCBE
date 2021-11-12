@@ -1,7 +1,23 @@
-export BASEDIR=`pwd` \
-git clone -b v21.02_phil https://github.com/violatingcp/identity_backend.git \
-git clone -b 21.02_phil https://github.com/violatingcp/pixeltrack-standalone.git \
-git clone https://github.com/violatingcp/TritonCBE.git \
+Step 1: Setup all the baseline code for this. You will need patatrack standalone, the Triton back end, and the server config file
+
+```
+export BASEDIR=`pwd` 
+git clone -b v21.02_phil https://github.com/violatingcp/identity_backend.git 
+git clone -b 21.02_phil https://github.com/violatingcp/pixeltrack-standalone.git 
+git clone https://github.com/violatingcp/TritonCBE.git 
+```
+There are in fact three different branches of configurations for the pixel track standlone, and three sets of configurations for the identity backend. The above is the default, which enables the highest throughput with CMSSW. However if you would like to run performance client tests with the same default setup. Please checkout. 
+```
+git clone -b v21.02_phil_standalone https://github.com/violatingcp/identity_backend.git 
+git clone -b 21.02_phil_standalone https://github.com/violatingcp/pixeltrack-standalone.git 
+```
+Finally, if you are interested in using the dynamic batching impelmentation. 
+```
+git clone -b v21.02_phil_standalone_dynamic https://github.com/violatingcp/identity_backend.git 
+git clone -b 21.02_phil_standalone_dynamic https://github.com/violatingcp/pixeltrack-standalone.git 
+git clone https://github.com/violatingcp/TritonCBE.git 
+```
+Once you have done the above, the following instructions apply to all branches. The specific perf and standalone tests will be listed below. 
 
 
 nvidia-docker run -it --gpus=1 -p8020:8000 -p8021:8001 -p8022:8002 --rm -v$BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ yongbinfeng/tritonserver:21.02v2 \
