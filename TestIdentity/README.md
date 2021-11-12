@@ -1,4 +1,4 @@
-Step 1: Setup all the baseline code for this. You will need patatrack standalone, the Triton back end, and the server config file
+Setup all the baseline code for this. You will need patatrack standalone, the Triton back end, and the server config file
 
 ```
 export BASEDIR=`pwd` 
