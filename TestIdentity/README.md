@@ -83,7 +83,7 @@ cmsrel CMSSW_12_0_1
 cd CMSSW_12_0_1/src
 cmsenv
 git cms-init
-git cms-merge-topic violatingcp:patatrackaas_v3
+git cms-merge-topic violatingcp:violatingcp/patatrackaas_v3
 scramv1 b -j 8
 hltGetConfiguration /dev/CMSSW_12_0_0/GRun \
    --globaltag auto:phase1_2021_realistic \
