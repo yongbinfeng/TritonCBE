@@ -11,8 +11,9 @@ input [
 output [
   {
     name: "OUTPUT0"
-    data_type: TYPE_INT8
-    dims: [ -1 ]
+    data_type: TYPE_UINT8
+    dims: [ 7200000 ]
+    #dims: [ -1 ]
   }
 ]
 instance_group [
