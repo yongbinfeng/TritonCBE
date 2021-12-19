@@ -2,8 +2,8 @@ Setup all the baseline code for this. You will need patatrack standalone, the Tr
 
 ```
 export BASEDIR=`pwd` 
-git clone -b v21.02_phil https://github.com/violatingcp/identity_backend.git 
-git clone -b 21.02_phil https://github.com/violatingcp/pixeltrack-standalone.git 
+git clone -b v21.02_phil_asynch_v4 https://github.com/violatingcp/identity_backend.git 
+git clone -b 21.02_phil_asynch https://github.com/violatingcp/pixeltrack-standalone.git 
 git clone https://github.com/violatingcp/TritonCBE.git 
 ```
 There are in fact three different branches of configurations for the pixel track standlone, and three sets of configurations for the identity backend. The above is the default, which enables the highest throughput with CMSSW. However if you would like to run performance client tests with the same default setup. Please checkout. 
@@ -83,7 +83,7 @@ cmsrel CMSSW_12_0_1
 cd CMSSW_12_0_1/src
 cmsenv
 git cms-init
-git cms-merge-topic violatingcp:violatingcp/patatrackaas_v3
+git cms-merge-topic violatingcp:hcalreco-facile-replay3-with-patatrackaas-v4-backup-12_0_1
 scramv1 b -j 8
 hltGetConfiguration /dev/CMSSW_12_0_0/GRun \
    --globaltag auto:phase1_2021_realistic \
