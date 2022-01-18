@@ -1,19 +1,19 @@
 ## Instructions to run Patatrack-AAS at Purdue
 
 ### Basic setup 
-Purdue nodes has some pre-set environments and one needs to clean these and set up the environment beforehand. To do this,
+Purdue nodes has some pre-set environments and one needs to clean these and set up the CMSSW-related environments beforehand. To do this,
 source [this script](https://github.com/yongbinfeng/TritonCBE/blob/main/TestIdentity/setup.sh):
 
 ```
 source setup.sh
 ```
 
-Usually the large files are placed under
+The disk space under `/home/` is limited and usually the large files can be placed under:
 ```
 /depot/cms/users/$USER
 ```
 
-Purdue nodes does not have Docker support and one can only run Singularity. So pull the needed docker containers and run with Singularity:
+Purdue nodes does not have Docker support and one can only run Singularity. So pull the needed docker containers first and run with Singularity later:
 
 ```
 cd /depot/cms/users/$USER
