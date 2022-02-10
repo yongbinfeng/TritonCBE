@@ -82,7 +82,7 @@ That will get the server running, but there are a few things that you might want
 
 ```
 cp $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/data/*.bin $BASEDIR/pixeltrack-standalone/data/
-singularity run --nv -e --no-home -B -v$BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ /depot/cms/users/$USER/triton_cbe.sif
+singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ /depot/cms/users/$USER/triton_cbe.sif
 cd /workspace/backend/pixel/ 
 ./cudadev  #This is barebones
 ./cudadev --numberOfThreads 10 # 10 threads
