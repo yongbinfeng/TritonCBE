@@ -84,6 +84,7 @@ That will get the server running, but there are a few things that you might want
 cp $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/data/*.bin $BASEDIR/pixeltrack-standalone/data/
 singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ /depot/cms/users/$USER/triton_cbe.sif
 cd /workspace/backend/pixel/ 
+export LD_LIBRARY_PATH="/workspace/backend/pixel/lib/cudadev/":$LD_LIBRARY_PATH
 ./cudadev  #This is barebones
 ./cudadev --numberOfThreads 10 # 10 threads
 ./cudadev --numberOfThreads 10 --transfer # including transfer off GPU
