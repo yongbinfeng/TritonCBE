@@ -70,7 +70,7 @@ cp $BASEDIR/pixeltrack-standalone/data/beamspot.bin data/
 Finally, we are now ready to launch the server. The key issue here is you need to point to the shared object libraries with the LD_Preload path seen belwo. 
 
 ```
-singularity run --nv -e --no-home -B $BASEDIR/TritonCBE/TestIdentity/:/models /depot/cms/users/$USER/triton_server.sif
+singularity run --nv -e --no-home -B $BASEDIR/TritonCBE/TestIdentity/:/models /depot/cms/users/$USER/triton_21.04.sif
 export LD_LIBRARY_PATH="/models/identity_fp32/1/":$LD_LIBRARY_PATH
 export LD_PRELOAD="/models/identity_fp32/1/libFramework.so:/models/identity_fp32/1/libCUDACore.so:/models/identity_fp32/1/libtbb.so.2:/models/identity_fp32/1/libCUDADataFormats.so:/models/identity_fp32/1/libCondFormats.so:/models/identity_fp32/1/pluginBeamSpotProducer.so:/models/identity_fp32/1/pluginSiPixelClusterizer.so:/models/identity_fp32/1/pluginValidation.so:/models/identity_fp32/1/pluginPixelTriplets.so:/models/identity_fp32/1/pluginPixelTrackFitting.so::/models/identity_fp32/1/pluginPixelVertexFinding.so:pluginSiPixelRecHits.so:/models/identity_fp32/1/libCUDADataFormats.so" 
 tritonserver --backend-config=tensorflow,version=2 --model-repository=/models
