@@ -17,8 +17,8 @@ Purdue nodes does not have Docker support and one can only run Singularity. So p
 
 ```
 cd /depot/cms/users/$USER
-singularity pull triton_cbe.sif docker://yongbinfeng/tritonserver:21.02v2 
-singularity pull triton_server.sif docker://nvcr.io/nvidia/tritonserver:21.02-py3
+singularity pull triton_cbe_21.04.sif docker://yongbinfeng/tritonserver:21.04
+singularity pull triton_21.04.sif docker://nvcr.io/nvidia/tritonserver:21.04-py3
 ```
 
 ### Compile and run PatatrackAAS
@@ -27,19 +27,16 @@ Setup all the baseline code for this. You will need patatrack standalone, the Tr
 
 ```
 export BASEDIR=`pwd` 
-git clone -b v21.02_phil_asynch_v4 https://github.com/violatingcp/identity_backend.git 
-git clone -b 21.02_phil_asynch https://github.com/yongbinfeng/pixeltrack-standalone.git 
-git clone https://github.com/violatingcp/TritonCBE.git 
+git clone -b 21.02_phil_asynch_12_3_X_port git@github.com:yongbinfeng/identity_backend.git
+git clone -b 21.02_phil_asynch_12_3_X_port git@github.com:yongbinfeng/pixeltrack-standalone.git
+git clone git@github.com:yongbinfeng/TritonCBE.git
 ```
-
-(The other two branches also need some minor fixes and will come later.)
-
 
 Once you have done the above, the following instructions apply to all branches. The specific perf and standalone tests will be listed below. To compile everything
-First compile the standalone patatrack. As a note this standalone has been fully synched with CMSSW_12_0_X.
+First compile the standalone patatrack. As a note this standalone has been fully synched with CMSSW_12_3_0_pre4.
 
 ```
-singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel /depot/cms/users/$USER/triton_cbe.sif
+singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel /depot/cms/users/$USER/triton_cbe_21.04.sif
 cd /workspace/backend/pixel/ 
 make -j`nproc` cudadev 
 ```
@@ -47,7 +44,7 @@ make -j`nproc` cudadev
 Now compile the backend
 
 ```
-singularity run --nv -e --no-home -B $BASEDIR/identity_backend/:/workspace/backend/ /depot/cms/users/$USER/triton_cbe.sif
+singularity run --nv -e --no-home -B $BASEDIR/identity_backend/:/workspace/backend/ /depot/cms/users/$USER/triton_cbe_21.04.sif
 cd /workspace/backend/ 
 mkdir build 
 cd build 
@@ -93,11 +90,11 @@ export LD_LIBRARY_PATH="/workspace/backend/pixel/lib/cudadev/":$LD_LIBRARY_PATH
 
 Finally, here is the recipe to install the cmssw client. It is largely based on the documentation here https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGlobalHLT
 ```
-cmsrel CMSSW_12_0_1
-cd CMSSW_12_0_1/src
+cmsrel CMSSW_12_3_0_pre4
+cd CMSSW_12_3_0_pre4/src
 cmsenv
 git cms-init
-git cms-merge-topic violatingcp:hcalreco-facile-replay3-with-patatrackaas-v4-backup-12_0_1
+git cms-merge-topic yongbinfeng:PatatrackAAS_12_3_0_pre4
 scramv1 b -j 8
 hltGetConfiguration /dev/CMSSW_12_0_0/GRun \
    --globaltag auto:phase1_2021_realistic \
