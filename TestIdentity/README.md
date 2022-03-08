@@ -60,10 +60,9 @@ cp $BASEDIR/identity_backend/build/libtriton_identity.so                     $BA
 cp $BASEDIR/pixeltrack-standalone/external/tbb/lib/libtbb.so*                $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
 cp $BASEDIR/pixeltrack-standalone/external/libbacktrace/lib/libbacktrace.so  $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
 cd $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
-wget data.tgz https://www.dropbox.com/s/c9pzz0k0h8ng5wd/data.tgz?dl=0  
+wget data.tgz https://www.dropbox.com/s/o91gcntmnizh54p/data.tar.gz?dl=0
 mv data.tgz?dl=0  data.tgz 
 tar xzvf data.tgz 
-cp $BASEDIR/pixeltrack-standalone/data/raw.bin data/
 cp $BASEDIR/pixeltrack-standalone/data/beamspot.bin data/
 ```
 
@@ -75,12 +74,24 @@ export LD_LIBRARY_PATH="/models/identity_fp32/1/":$LD_LIBRARY_PATH
 export LD_PRELOAD="/models/identity_fp32/1/libFramework.so:/models/identity_fp32/1/libCUDACore.so:/models/identity_fp32/1/libtbb.so.2:/models/identity_fp32/1/libCUDADataFormats.so:/models/identity_fp32/1/libCondFormats.so:/models/identity_fp32/1/pluginBeamSpotProducer.so:/models/identity_fp32/1/pluginSiPixelClusterizer.so:/models/identity_fp32/1/pluginValidation.so:/models/identity_fp32/1/pluginPixelTriplets.so:/models/identity_fp32/1/pluginPixelTrackFitting.so::/models/identity_fp32/1/pluginPixelVertexFinding.so:pluginSiPixelRecHits.so:/models/identity_fp32/1/libCUDADataFormats.so" 
 tritonserver --backend-config=tensorflow,version=2 --model-repository=/models
 ```
-That will get the server running, but there are a few things that you might want to do to check the performance. If you have compiled the standalone projects above, you can use the standalone Patatrack to get the local throughput to do that (note you may have to update env.sh to point to the right libaries in the container): 
+That will get the server running, but there are a few things that you might want to do to check the performance. 
 
+If you have compiled the standalone projects above, you can use the standalone Patatrack to get the local throughput to do that. To do this, change [this](https://github.com/yongbinfeng/pixeltrack-standalone/blob/21.02_phil_asynch_12_3_X_port/src/cudadev/plugin-BeamSpotProducer/BeamSpotToCUDA.cc#L31) line to
+```
+  :   \\beamSpotPODToken_{reg.consumes<BeamSpotPOD>()},
+```
+
+and the following `bsHost` to
+```
+  *bsHost = iSetup.get<BeamSpotPOD>();
+  //*bsHost = iEvent.get(beamSpotPODToken_);
+```
+And then recompile; run:
 ```
 cp $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/data/*.bin $BASEDIR/pixeltrack-standalone/data/
 singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ /depot/cms/users/$USER/triton_cbe.sif
 cd /workspace/backend/pixel/ 
+source env.sh
 export LD_LIBRARY_PATH="/workspace/backend/pixel/lib/cudadev/":$LD_LIBRARY_PATH
 ./cudadev  #This is barebones
 ./cudadev --numberOfThreads 10 # 10 threads
