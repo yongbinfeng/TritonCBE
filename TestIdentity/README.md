@@ -107,15 +107,14 @@ cmsenv
 git cms-init
 git cms-merge-topic yongbinfeng:PatatrackAAS_12_3_0_pre4
 scramv1 b -j 8
-hltGetConfiguration /dev/CMSSW_12_0_0/GRun \
-   --globaltag auto:phase1_2021_realistic \
-   --mc \
-   --unprescale \
-   --output minimal \
-   --customise HLTrigger/Configuration/customizeHLTforPatatrack.customizeHLTforPatatrack  > hltRun3Winter21MC.py
-#edit hltRun3Winter21MC.py and change customizeHLTforPatatrack to customizeHLTforPatatrackAAS
+cd test
 ```
-Now you should have everything you need to run PatatatrackAAS
+Change the data files to the corresponding ones in the cluster in the script `hlt_customised.py`. On lxplus the files can be found under
+```
+/eos/cms/store/user/yofeng/Run2018D/
+```
+
+Now you should have everything you need to run Patatrack and PatatatrackAAS
 
 
 
