@@ -58,8 +58,9 @@ Now lets build the server setup. We point all the shared object files into the s
 cp $BASEDIR/pixeltrack-standalone/lib/cudadev/*.so $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
 cp $BASEDIR/identity_backend/build/libtriton_identity.so                     $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
 cp $BASEDIR/pixeltrack-standalone/external/tbb/lib/libtbb.so*                $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
-cp $BASEDIR/pixeltrack-standalone/external/libbacktrace/lib/libbacktrace.so*  $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
+cp $BASEDIR/pixeltrack-standalone/external/libbacktrace/lib/libbacktrace*  $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/ 
 cd $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/
+cp /depot/cms/private/users/feng356/Patatrack_12_3_0_pre4/TritonCBE/TestIdentity/identity_fp32/1/plugins.txt ./
 mkdir data
 cp /depot/cms/private/users/feng356/Patatrack_12_3_0_pre4/TritonCBE/TestIdentity/identity_fp32/1/data/* data/
 ```
@@ -87,7 +88,7 @@ and the following `bsHost` to
 And then recompile; run:
 ```
 cp $BASEDIR/TritonCBE/TestIdentity/identity_fp32/1/data/*.bin $BASEDIR/pixeltrack-standalone/data/
-singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ /depot/cms/users/$USER/triton_cbe.sif
+singularity run --nv -e --no-home -B $BASEDIR/pixeltrack-standalone/:/workspace/backend/pixel/ /depot/cms/users/$USER/triton_cbe_21.04.sif
 cd /workspace/backend/pixel/ 
 source env.sh
 export LD_LIBRARY_PATH="/workspace/backend/pixel/lib/cudadev/":$LD_LIBRARY_PATH
