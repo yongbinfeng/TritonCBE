@@ -106,7 +106,7 @@ cmsenv
 git cms-init
 git cms-merge-topic yongbinfeng:PatatrackAAS_12_3_0_pre4
 scramv1 b -j 8
-cd test
+cd HLTrigger/Configuration/test
 ```
 Change the data files to the corresponding ones in the cluster in the script `hlt_customised.py`. On lxplus the files can be found under
 ```
